@@ -2,7 +2,8 @@
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1"><title>问题 · 文学问答</title><link rel="stylesheet" href="./profile.css?v=20261118b"><link rel="stylesheet" href="./account.css?v=20261118b"><link rel="stylesheet" href="./questions.css?v=20261118q1"><link rel="stylesheet" href="./answers.css?v=20261118a1"></head><body>
 <header><a class="brand" href="./">文学问答</a><nav aria-label="主导航"><a href="./">返回问题首页</a><a href="./profile.html">我的主页</a><button type="button" data-feature="登录与注册">登录 / 注册</button></nav></header>
 <main class="question-main"><p id="question-status" class="question-status" role="status" aria-live="polite">正在读取…</p>
-<section id="question-detail" hidden><h1 id="question-title"></h1><p id="question-meta" class="question-meta"></p><div id="question-body"></div><div id="question-owner-actions" class="question-actions" hidden><button id="question-edit" type="button" class="secondary">编辑问题</button><button id="question-delete" type="button" class="secondary">删除问题</button></div></section>
+<section id="question-detail" hidden><h1 id="question-title"></h1><p id="question-meta" class="question-meta"></p><div id="question-body"></div><div id="bookmark-actions" class="question-actions" hidden></div>
+<div id="question-owner-actions" class="question-actions" hidden><button id="question-edit" type="button" class="secondary">编辑问题</button><button id="question-delete" type="button" class="secondary">删除问题</button></div></section>
 <section id="question-editor" hidden><h1 id="editor-heading">提个问题</h1><form id="question-form"><label>标题<input id="question-title-input" required maxlength="120" placeholder="把你想问的事情写清楚"></label><label>书名（选填）<input id="question-book-input" maxlength="100" placeholder="这个问题与哪本书有关？"></label><label>问题描述<textarea id="question-body-input" required maxlength="10000" placeholder="交代你读到的情境，以及具体疑问。"></textarea><small>最多10000字，按普通文字展示。</small></label><div class="question-actions"><button id="question-submit" class="primary">发布问题</button><button id="question-cancel" type="button" class="secondary">取消</button></div></form></section>
 <button id="question-login" type="button" class="primary" hidden>登录后提问</button><button id="question-retry" type="button" class="secondary" hidden>重新读取</button>
 <section id="answers" hidden aria-labelledby="answers-heading">
@@ -39,5 +40,7 @@
 
 <script src="./questions.js?v=20261118q1" defer></script>
 <script src="./answers.js?v=20261118a1" defer></script>
-<script src="./answer-panel.js?v=20261118a1" defer></script>
+<script src="./answer-panel.js?v=20261118r1" defer></script>
+<script src="./bookmarks.js?v=20261118r1" defer></script>
+<script src="./bookmark-ui.js?v=20261118r1" defer></script>
 <script src="./question-page.js?v=20261118a1" defer></script></body></html>

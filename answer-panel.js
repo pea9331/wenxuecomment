@@ -11,6 +11,8 @@
   let writing = false;
   let loading = false;
   let editing = null;
+  let autoBusy = false;
+  let writeVersion = 0;
   let draftId = crypto.randomUUID();
 
   function message(text) { get('answer-status').textContent = text; }
@@ -103,10 +105,52 @@
       if (version === listVersion) { loading = false; controls(); }
     }
   }
+  // Refresh only the loaded portion; leave the composer and its draft untouched.
+  async function autoRefresh() {
+    if (!questionId || document.hidden || get('answers').hidden || writing || loading || autoBusy) return;
+    autoBusy = true;
+    const version = listVersion;
+    const targetQuestion = questionId;
+    const identity = identityVersion;
+    const writeGeneration = writeVersion;
+    const pageCount = Math.max(1, Math.ceil(items.length / 20));
+    try {
+      const fresh = [];
+      let more = false;
+      for (let page = 0; page < pageCount; page++) {
+        const result = await store.list(targetQuestion, page * 20);
+        fresh.push(...result.items);
+        more = result.hasMore;
+        if (!more) break;
+      }
+      if (version !== listVersion || identity !== identityVersion || writeGeneration !== writeVersion ||
+          targetQuestion !== questionId || writing || loading) return;
+      const changed = JSON.stringify(items) !== JSON.stringify(fresh) || hasMore !== more;
+      if (changed) {
+        // Avoid replacing a keyboard user's focused edit/delete control.
+        if (get('answer-list').contains(document.activeElement)) return;
+        items = fresh;
+        offset = fresh.length;
+        hasMore = more;
+        renderItems();
+        message(items.length ? '回答已自动更新。' : '还没有回答，可以留下第一条看法。');
+      }
+    } catch (_) {
+      // Keep existing content and drafts; retry on the next tick.
+    } finally {
+      autoBusy = false;
+    }
+  }
+  window.setInterval(autoRefresh, 10000);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) autoRefresh();
+  });
+  window.addEventListener('focus', autoRefresh);
   async function write(action, resetEditor) {
     if (writing || !user) return;
     const ownerId = user.id;
     const version = identityVersion;
+    ++writeVersion; // Ignore background results started before this write.
     writing = true;
     controls();
     message('正在提交…');

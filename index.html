@@ -61,17 +61,17 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--green);outline-offs
 <input id="query" name="q" type="search" maxlength="120" aria-label="搜索书名、问题或关键词" placeholder="搜索书名、问题或关键词">
 <button class="primary" type="submit">搜索</button>
 </form>
-<p class="progress">搜索标题、正文或书名；短关键词支持近似匹配，结果可能包含相似文字。<button id="search-clear" type="button" hidden>查看全部问题</button></p>
+<p class="progress">搜索标题、正文或书名；支持短词同音字与近似匹配，相似结果仅供参考。<button id="search-clear" type="button" hidden>查看全部问题</button></p>
 </section>
 <div class="layout">
 <section aria-labelledby="questions-heading">
 <div class="section-heading"><h2 id="questions-heading">最近的问题</h2><a class="primary" href="./question.html">提个问题</a></div>
 <p id="questions-status" class="question-status" role="status">正在读取问题…</p><div id="question-list"></div><button id="questions-more" class="primary" type="button" hidden>加载更多</button><button id="questions-retry" type="button" hidden>重新加载</button>
 </section>
-<aside aria-labelledby="saved-heading"><h2 id="saved-heading">我的收藏</h2><p>收藏想继续读的讨论，之后在这里找到。</p><button type="button" data-feature="收藏">查看收藏</button></aside>
+<aside aria-labelledby="saved-heading"><h2 id="saved-heading">我的收藏</h2><p>收藏想继续读的讨论，之后在这里找到。</p><a class="primary" href="./profile.html#saved">查看收藏</a></aside>
 </div>
 </main>
-<footer>文学问答 · 首页预览版</footer>
+<footer>文学问答</footer>
 <dialog id="notice" aria-labelledby="notice-title"><h2 id="notice-title"></h2><p id="notice-text"></p><form method="dialog"><button class="primary" id="notice-ok">知道了</button></form></dialog>
 <script>
 const notice = document.getElementById('notice');
@@ -147,7 +147,7 @@ checkHash();
 <script src="./account.js?v=20261118q1" defer></script>
 <script src="./share.js?v=20261118b" defer></script>
 <script src="./questions.js?v=20261118q1" defer></script>
-<script src="./search.js?v=20261118s2" defer></script>
-<script src="./question-list.js?v=20261118s2" defer></script>
+<script src="./search.js?v=20261118r1" defer></script>
+<script src="./question-list.js?v=20261118r1" defer></script>
 </body>
 </html>

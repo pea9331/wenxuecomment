@@ -174,6 +174,12 @@
       loadReceivedAnswers(get('section-body'), version, user.id);
       return;
     }
+    if (key === 'saved') {
+      const ownerId = user.id;
+      window.mountBookmarks(get('section-body'), ownerId,
+        () => version === sectionVersion && user?.id === ownerId);
+      return;
+    }
     if (key === 'settings') {
       const settings = element('div');
       settings.id = 'account-settings';

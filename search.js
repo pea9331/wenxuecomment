@@ -6,7 +6,7 @@
     if (!window.readerClient) throw new Error('服务未连接，请刷新重试。');
     const {data,error} = await window.readerClient.rpc('search_questions',{search_text:term,page_offset:offset});
     if (error) {
-      if (error.code === 'PGRST202' || error.code === '42883') throw new Error('搜索尚未配置，请先执行 search-setup.sql。');
+      if (error.code === 'PGRST202' || error.code === '42883') throw new Error('搜索尚未配置，请先执行 update-setup.sql。');
       throw error;
     }
     return {items:data.slice(0,20),hasMore:data.length>20};
