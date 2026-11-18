@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8"><meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="文学问答，围绕作品提问，交流不同的读法。">
 <title>文学问答</title>
@@ -45,12 +45,12 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--green);outline-offs
 @media(max-width:650px){header{padding:18px 20px;align-items:flex-start;gap:12px}nav{gap:14px;font-size:13px}main{padding:44px 20px 20px}.hero{margin-bottom:42px}.layout{grid-template-columns:1fr;gap:25px}aside{border-left:0;border-top:1px solid var(--line);padding:22px 0 0}.search input{font-size:14px;padding:10px 7px}.primary{padding:9px 13px}.empty{padding:32px 0}footer{padding:20px;margin-top:30px}}
 @media(max-width:360px){header{flex-direction:column;align-items:flex-start;gap:8px}nav{gap:12px}.brand{font-size:20px}}
 </style>
-<link rel="stylesheet" href="./account.css">
+<link rel="stylesheet" href="./account.css?v=20261118b">
 </head>
 <body>
 <header>
 <a class="brand" href="./">文学问答</a>
-<nav aria-label="主导航"><a href="./" aria-current="page">问题</a><button type="button" data-feature="个人主页">我的主页</button><button type="button" data-feature="登录与注册">登录 / 注册</button></nav>
+<nav aria-label="主导航"><button type="button" data-share-page>分享</button><a href="./" aria-current="page">问题</a><a href="./profile.html">我的主页</a><button type="button" data-feature="登录与注册">登录 / 注册</button></nav>
 </header>
 <main>
 <div id="hash-notice" role="status">该内容不存在或已删除。<a href="#" id="return-home">返回首页</a></div>
@@ -153,6 +153,7 @@ checkHash();
 </dialog>
 <script src="./config.js" defer></script>
 <script src="./vendor/supabase.js" defer></script>
-<script src="./account.js" defer></script>
+<script src="./account.js?v=20261118b" defer></script>
+<script src="./share.js?v=20261118b" defer></script>
 </body>
 </html>

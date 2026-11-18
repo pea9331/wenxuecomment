@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1"><title>我的主页 · 文学问答</title><link rel="stylesheet" href="./profile.css?v=20261118b"><link rel="stylesheet" href="./account.css?v=20261118b"></head>
+<body><header><a class="brand" href="./">文学问答</a><nav aria-label="主导航"><a href="./">返回问题首页</a><a href="./profile.html" aria-current="page">我的主页</a><button data-feature="登录与注册" type="button">登录 / 注册</button></nav></header>
+<main><section class="profile-summary" aria-labelledby="reader-name"><div class="avatar" aria-hidden="true" id="reader-avatar">读</div><div><h1 id="reader-name">我的主页</h1><p id="reader-bio">正在读取账号…</p></div><button type="button" class="secondary" data-edit-profile hidden>编辑资料</button></section>
+<p id="page-status" role="status" aria-live="polite"></p>
+<div class="workspace"><nav class="sidebar" aria-label="个人内容"><a href="#questions">我的提问</a><a href="#answers">收到的回答</a><a href="#saved">我的收藏</a><a href="#following">关注的问题</a><a href="#history">浏览历史</a><a href="#settings">通知与账号</a></nav>
+<section class="content" aria-labelledby="section-title"><h2 id="section-title">我的提问</h2><div id="section-body"></div></section></div></main>
+<footer>文学问答</footer>
+<dialog id="account-dialog" aria-labelledby="account-title">
+<h2 id="account-title">登录</h2>
+<p id="account-status" role="status" aria-live="polite"></p>
+<section id="credentials-view">
+<form id="credentials-form">
+<label>邮箱<input id="account-email" type="email" autocomplete="email" required maxlength="254"></label>
+<label>密码<input id="account-password" type="password" autocomplete="current-password" required minlength="8" maxlength="128"></label>
+<div class="account-actions"><button id="account-submit" class="primary">登录</button><button id="account-toggle" class="secondary" type="button">创建账号</button></div>
+</form>
+</section>
+<section id="profile-view" hidden>
+<p id="account-email-display"></p>
+<form id="profile-form">
+<label>昵称<input id="profile-nickname" required maxlength="24" autocomplete="nickname"></label>
+<label>简介<textarea id="profile-bio" maxlength="240"></textarea></label>
+<button class="primary" id="profile-save">保存资料</button>
+</form>
+<div class="account-actions"><button class="secondary" id="account-signout" type="button">退出登录</button></div>
+</section>
+<form method="dialog"><button class="secondary">关闭</button></form>
+</dialog>
+<script src="./config.js" defer></script>
+<script src="./vendor/supabase.js" defer></script>
+<script src="./account.js?v=20261118b" defer></script>
+
+<script src="./profile.js?v=20261118b" defer></script>
+</body></html>

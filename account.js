@@ -2,7 +2,7 @@
   const get = id => document.getElementById(id);
   const dialog = get('account-dialog');
   const authButton = document.querySelector('[data-feature="登录与注册"]');
-  const profileButton = document.querySelector('[data-feature="个人主页"]');
+  const editProfileButton = document.querySelector('[data-edit-profile]');
   let client = null;
   let user = null;
   let signup = false;
@@ -44,7 +44,13 @@
     get('account-submit').textContent = signup ? '注册' : '登录';
     get('account-toggle').textContent = signup ? '已有账号，去登录' : '创建账号';
     get('account-password').autocomplete = signup ? 'new-password' : 'current-password';
-    authButton.textContent = user ? '账号' : '登录 / 注册';
+    authButton.textContent = user ? '我的账号' : '登录 / 注册';
+    window.readerUser = user;
+    const renderedUser = user;
+    setTimeout(() => {
+      if (window.readerUser !== renderedUser) return;
+      window.dispatchEvent(new CustomEvent('reader-auth', {detail: renderedUser}));
+    }, 0);
     get('account-email-display').textContent = user?.email || '';
   }
 
@@ -98,8 +104,18 @@
     });
   }
 
-  authButton.addEventListener('click', openAccount);
-  profileButton.addEventListener('click', openAccount);
+  authButton.addEventListener('click', () => {
+    if (user && !location.pathname.endsWith('/profile.html')) {
+      location.href = new URL('./profile.html', location.href).href;
+      return;
+    }
+    if (user) {
+      location.hash = 'settings';
+      return;
+    }
+    openAccount();
+  });
+  editProfileButton?.addEventListener('click', openAccount);
   dialog.addEventListener('close', () => {
     get('account-password').value = '';
     previousFocus?.focus();
@@ -120,6 +136,16 @@
         email: get('account-email').value.trim(),
         password: get('account-password').value
       };
+      if (credentials.email.length > 254 || credentials.password.length > 128 || credentials.password.length < 8) {
+        message('请检查邮箱与密码长度。密码为8至128个字符。');
+        return;
+      }
+      const passwordBytes = new TextEncoder().encode(credentials.password).length;
+      if (passwordBytes > 72 && signup) {
+        message('密码最多为72字节。中文和表情会占多个字节，请缩短后重试。');
+        get('account-password').focus();
+        return;
+      }
       const redirect = new URL('./', location.href).href;
       const result = signup
         ? await client.auth.signUp({...credentials, options: {emailRedirectTo: redirect}})
@@ -138,20 +164,28 @@
     if (!client || !user) return;
     const nickname = get('profile-nickname').value.trim();
     const bio = get('profile-bio').value.trim();
-    if (!nickname) {
-      message('昵称不能为空。');
+    if (!nickname || Array.from(nickname).length > 24 || Array.from(bio).length > 240) {
+      message('昵称需要1至24字，简介最多240字。');
       get('profile-nickname').focus();
       return;
     }
     perform(async () => {
+      const editingUserId = user.id;
       message('正在保存…');
       const {data: auth, error: authError} = await client.auth.getUser();
       if (authError || !auth.user) throw authError || new Error('Missing user');
+      if (auth.user.id !== editingUserId || user?.id !== editingUserId) {
+        message('登录账号发生变化，请重新打开编辑资料。');
+        return;
+      }
       const {error} = await client.from('reader_profiles').upsert({
         id: auth.user.id, nickname, bio
       }, {onConflict: 'id'});
       if (error) throw error;
+      if (user?.id !== editingUserId) return;
       message('资料已保存。');
+      window.dispatchEvent(new CustomEvent('reader-profile-saved', {detail: {id: editingUserId, nickname, bio}}));
+      dialog.close();
     });
   });
 
@@ -175,20 +209,24 @@
     client = window.supabase.createClient(config.supabaseUrl, config.supabasePublishableKey, {
       auth: {persistSession: true, autoRefreshToken: true, detectSessionInUrl: true}
     });
-    client.auth.onAuthStateChange((_event, session) => {
+    window.readerClient = client;
+    client.auth.onAuthStateChange((event, session) => {
+      const previousId = user?.id;
       user = session?.user || null;
-      generation++;
+      if (previousId !== user?.id) generation++;
       render();
-      if (!user) get('profile-form').reset();
+      if (previousId !== user?.id) {
+        get('profile-form').reset();
+        get('account-password').value = '';
+      }
       // SDK callbacks stay synchronous. Profile queries run outside this callback.
-      if (user && dialog.open && !busy) {
+      if (user && dialog.open && !busy && previousId !== user.id) {
         setTimeout(() => perform(loadProfile), 0);
       }
     });
-    client.auth.getSession().then(({data}) => {
-      user = data.session?.user || null;
-      render();
-    }).catch(() => message('登录状态读取失败，请重新登录。'));
+    // INITIAL_SESSION is delivered by onAuthStateChange. Avoid a second
+    // asynchronous session read overwriting a newer sign-out event.
+
   } catch (_error) {
     client = null;
   }
