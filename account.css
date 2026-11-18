@@ -1,0 +1,10 @@
+#account-dialog{max-width:500px;max-height:90dvh;overflow:auto}
+#account-dialog label{display:block;margin:16px 0}
+#account-dialog input,#account-dialog textarea{display:block;width:100%;box-sizing:border-box;margin-top:6px;padding:10px;border:1px solid var(--line);border-radius:5px;background:white;color:var(--ink);font:inherit}
+#account-dialog textarea{min-height:90px;resize:vertical}
+#account-dialog .account-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:18px}
+#account-dialog .secondary{background:transparent;border:1px solid var(--line);border-radius:5px;padding:9px 15px;color:var(--ink)}
+#account-dialog button:disabled{opacity:.55;cursor:wait}
+#account-status{white-space:pre-wrap;color:var(--green);font-size:14px;overflow-wrap:anywhere}
+#account-email-display{overflow-wrap:anywhere;color:var(--muted);font-size:14px}
+[hidden]{display:none!important}

@@ -45,6 +45,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--green);outline-offs
 @media(max-width:650px){header{padding:18px 20px;align-items:flex-start;gap:12px}nav{gap:14px;font-size:13px}main{padding:44px 20px 20px}.hero{margin-bottom:42px}.layout{grid-template-columns:1fr;gap:25px}aside{border-left:0;border-top:1px solid var(--line);padding:22px 0 0}.search input{font-size:14px;padding:10px 7px}.primary{padding:9px 13px}.empty{padding:32px 0}footer{padding:20px;margin-top:30px}}
 @media(max-width:360px){header{flex-direction:column;align-items:flex-start;gap:8px}nav{gap:12px}.brand{font-size:20px}}
 </style>
+<link rel="stylesheet" href="./account.css">
 </head>
 <body>
 <header>
@@ -59,7 +60,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--green);outline-offs
 <input id="query" name="q" type="search" maxlength="120" aria-label="搜索书名、问题或关键词" placeholder="搜索书名、问题或关键词">
 <button class="primary" type="submit">搜索</button>
 </form>
-<p class="progress">首页预览 · 账号、提问和搜索正在接入</p>
+<p class="progress">提问和搜索正在接入</p>
 </section>
 <div class="layout">
 <section aria-labelledby="questions-heading">
@@ -93,6 +94,7 @@ notice.addEventListener('close', () => {
 });
 
 document.querySelectorAll('[data-feature]').forEach(button => {
+  if (['个人主页', '登录与注册'].includes(button.dataset.feature)) return;
   button.addEventListener('click', () => {
     const feature = button.dataset.feature;
     showProgress(feature + '正在接入', '当前完成了首页布局。此功能接通后，你可以在这里' + ({'个人主页':'查看自己的资料和讨论。','登录与注册':'登录并建立站内账号。','发布问题':'填写并发布问题。','收藏':'找回收藏过的讨论。'}[feature]));
@@ -127,5 +129,30 @@ returnHome.addEventListener('click', e => {
 window.addEventListener('hashchange', checkHash);
 checkHash();
 </script>
+
+<dialog id="account-dialog" aria-labelledby="account-title">
+<h2 id="account-title">登录</h2>
+<p id="account-status" role="status" aria-live="polite"></p>
+<section id="credentials-view">
+<form id="credentials-form">
+<label>邮箱<input id="account-email" type="email" autocomplete="email" required maxlength="254"></label>
+<label>密码<input id="account-password" type="password" autocomplete="current-password" required minlength="8" maxlength="128"></label>
+<div class="account-actions"><button id="account-submit" class="primary">登录</button><button id="account-toggle" class="secondary" type="button">创建账号</button></div>
+</form>
+</section>
+<section id="profile-view" hidden>
+<p id="account-email-display"></p>
+<form id="profile-form">
+<label>昵称<input id="profile-nickname" required maxlength="24" autocomplete="nickname"></label>
+<label>简介<textarea id="profile-bio" maxlength="240"></textarea></label>
+<button class="primary" id="profile-save">保存资料</button>
+</form>
+<div class="account-actions"><button class="secondary" id="account-signout" type="button">退出登录</button></div>
+</section>
+<form method="dialog"><button class="secondary">关闭</button></form>
+</dialog>
+<script src="./config.js" defer></script>
+<script src="./vendor/supabase.js" defer></script>
+<script src="./account.js" defer></script>
 </body>
 </html>
