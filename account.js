@@ -68,6 +68,7 @@
     get('profile-nickname').value = data?.nickname || '';
     get('profile-bio').value = data?.bio || '';
     message(data ? '' : '设置一个昵称，建立你的阅读资料。');
+    return data;
   }
 
   async function perform(action) {
@@ -154,7 +155,10 @@
       get('account-password').value = '';
       user = result.data.session?.user || null;
       render();
-      if (user) await loadProfile();
+      if (user) {
+        const profile = await loadProfile();
+        if (profile && dialog.open) dialog.close();
+      }
       else message('如果此邮箱可以注册，验证邮件将发送到邮箱。请检查邮件及垃圾箱，完成验证后再登录。');
     });
   });

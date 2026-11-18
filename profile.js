@@ -10,6 +10,7 @@
   };
   let user = null;
   let requestVersion = 0;
+  let sectionVersion = 0;
   let busySigningOut = false;
   const editButton = document.querySelector('[data-edit-profile]');
 
@@ -40,7 +41,49 @@
     return label;
   }
 
+  async function loadMyQuestions(container, version, ownerId) {
+    let offset = 0;
+    let loading = false;
+    const list = element('div');
+    const status = element('p', '正在读取问题…');
+    status.className = 'question-status';
+    const more = element('button', '加载更多');
+    more.type = 'button';
+    more.className = 'secondary';
+    more.hidden = true;
+    const retry = element('button', '重新读取');
+    retry.type = 'button';
+    retry.hidden = true;
+    container.append(status, list, more, retry);
+    async function load(reset = false) {
+      if (loading || version !== sectionVersion) return;
+      loading = true;
+      more.disabled = true;
+      retry.hidden = true;
+      if (reset) { offset = 0; list.replaceChildren(); }
+      try {
+        const result = await window.questionStore.list({author: ownerId, offset});
+        if (version !== sectionVersion || user?.id !== ownerId) return;
+        result.items.forEach(item => list.append(window.questionStore.card(item)));
+        offset += result.items.length;
+        status.textContent = offset ? '' : '你还没有发布问题。';
+        more.hidden = !result.hasMore;
+      } catch (error) {
+        if (version !== sectionVersion) return;
+        status.textContent = window.questionStore.errorMessage(error);
+        retry.hidden = false;
+      } finally {
+        loading = false;
+        more.disabled = false;
+      }
+    }
+    more.addEventListener('click', () => load());
+    retry.addEventListener('click', () => load(true));
+    await load();
+  }
+
   function renderSection() {
+    const version = ++sectionVersion;
     const key = location.hash.slice(1) || 'questions';
     const section = sections[key];
     get('section-body').replaceChildren();
@@ -64,6 +107,14 @@
       login.addEventListener('click', () => document.querySelector('[data-feature="登录与注册"]').click());
       container.append(login);
       get('section-body').append(container);
+      return;
+    }
+    if (key === 'questions') {
+      const publish = element('a', '提个问题');
+      publish.className = 'primary';
+      publish.href = './question.html';
+      get('section-body').append(publish);
+      loadMyQuestions(get('section-body'), version, user.id);
       return;
     }
     if (key === 'settings') {
