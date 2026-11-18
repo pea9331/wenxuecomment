@@ -61,7 +61,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--green);outline-offs
 <input id="query" name="q" type="search" maxlength="120" aria-label="搜索书名、问题或关键词" placeholder="搜索书名、问题或关键词">
 <button class="primary" type="submit">搜索</button>
 </form>
-<p class="progress">关键词搜索正在接入</p>
+<p class="progress">搜索标题、正文或书名；短关键词支持近似匹配，结果可能包含相似文字。<button id="search-clear" type="button" hidden>查看全部问题</button></p>
 </section>
 <div class="layout">
 <section aria-labelledby="questions-heading">
@@ -100,16 +100,6 @@ document.querySelectorAll('[data-feature]').forEach(button => {
     const feature = button.dataset.feature;
     showProgress(feature + '正在接入', '当前完成了首页布局。此功能接通后，你可以在这里' + ({'个人主页':'查看自己的资料和讨论。','登录与注册':'登录并建立站内账号。','发布问题':'填写并发布问题。','收藏':'找回收藏过的讨论。'}[feature]));
   });
-});
-
-document.getElementById('search-form').addEventListener('submit', event => {
-  event.preventDefault();
-  const query = document.getElementById('query').value.trim();
-  if (!query) {
-    document.getElementById('query').focus();
-    return;
-  }
-  showProgress('搜索正在接入', '问题数据库接通后，可以搜索“' + query + '”相关的问题。');
 });
 
 function checkHash() {
@@ -157,6 +147,7 @@ checkHash();
 <script src="./account.js?v=20261118q1" defer></script>
 <script src="./share.js?v=20261118b" defer></script>
 <script src="./questions.js?v=20261118q1" defer></script>
-<script src="./question-list.js?v=20261118q1" defer></script>
+<script src="./search.js?v=20261118s2" defer></script>
+<script src="./question-list.js?v=20261118s2" defer></script>
 </body>
 </html>
