@@ -1,11 +1,17 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1"><title>问题 · 文学问答</title><link rel="stylesheet" href="./profile.css?v=20261118b"><link rel="stylesheet" href="./account.css?v=20261118b"><link rel="stylesheet" href="./questions.css?v=20261118q1"></head><body>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1"><title>问题 · 文学问答</title><link rel="stylesheet" href="./profile.css?v=20261118b"><link rel="stylesheet" href="./account.css?v=20261118b"><link rel="stylesheet" href="./questions.css?v=20261118q1"><link rel="stylesheet" href="./answers.css?v=20261118a1"></head><body>
 <header><a class="brand" href="./">文学问答</a><nav aria-label="主导航"><a href="./">返回问题首页</a><a href="./profile.html">我的主页</a><button type="button" data-feature="登录与注册">登录 / 注册</button></nav></header>
 <main class="question-main"><p id="question-status" class="question-status" role="status" aria-live="polite">正在读取…</p>
-<section id="question-detail" hidden><h1 id="question-title"></h1><p id="question-meta" class="question-meta"></p><div id="question-body"></div><div id="question-owner-actions" class="question-actions" hidden><button id="question-edit" type="button" class="secondary">编辑问题</button><button id="question-delete" type="button" class="secondary">删除问题</button></div><p class="question-meta">回答功能将在下一轮接入。</p></section>
+<section id="question-detail" hidden><h1 id="question-title"></h1><p id="question-meta" class="question-meta"></p><div id="question-body"></div><div id="question-owner-actions" class="question-actions" hidden><button id="question-edit" type="button" class="secondary">编辑问题</button><button id="question-delete" type="button" class="secondary">删除问题</button></div></section>
 <section id="question-editor" hidden><h1 id="editor-heading">提个问题</h1><form id="question-form"><label>标题<input id="question-title-input" required maxlength="120" placeholder="把你想问的事情写清楚"></label><label>书名（选填）<input id="question-book-input" maxlength="100" placeholder="这个问题与哪本书有关？"></label><label>问题描述<textarea id="question-body-input" required maxlength="10000" placeholder="交代你读到的情境，以及具体疑问。"></textarea><small>最多10000字，按普通文字展示。</small></label><div class="question-actions"><button id="question-submit" class="primary">发布问题</button><button id="question-cancel" type="button" class="secondary">取消</button></div></form></section>
 <button id="question-login" type="button" class="primary" hidden>登录后提问</button><button id="question-retry" type="button" class="secondary" hidden>重新读取</button>
-</main><footer>文学问答</footer>
+<section id="answers" hidden aria-labelledby="answers-heading">
+<div class="answer-top"><h2 id="answers-heading">回答</h2><button type="button" id="answers-refresh" class="secondary">刷新回答</button></div>
+<p id="answer-status" role="status" aria-live="polite"></p>
+<div id="answer-list"></div><button type="button" id="answers-more" class="secondary" hidden>加载更多回答</button>
+<p id="answer-login-note" hidden>登录后参与回答。<button type="button" id="answer-login" class="secondary">登录 / 注册</button></p>
+<form id="answer-form" hidden><label for="answer-body-input" id="answer-form-label">写下你的回答</label><textarea id="answer-body-input" maxlength="5000" required></textarea><small>最多5000字，按普通文字显示。</small><div class="question-actions"><button id="answer-submit" class="primary">发表回答</button><button id="answer-cancel" class="secondary" type="button" hidden>取消编辑</button></div></form>
+</section></main><footer>文学问答</footer>
 <dialog id="account-dialog" aria-labelledby="account-title">
 <h2 id="account-title">登录</h2>
 <p id="account-status" role="status" aria-live="polite"></p>
@@ -32,4 +38,6 @@
 <script src="./account.js?v=20261118q1" defer></script>
 
 <script src="./questions.js?v=20261118q1" defer></script>
-<script src="./question-page.js?v=20261118q1" defer></script></body></html>
+<script src="./answers.js?v=20261118a1" defer></script>
+<script src="./answer-panel.js?v=20261118a1" defer></script>
+<script src="./question-page.js?v=20261118a1" defer></script></body></html>

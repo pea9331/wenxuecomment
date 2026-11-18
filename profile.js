@@ -82,6 +82,59 @@
     await load();
   }
 
+  async function loadReceivedAnswers(container, version, ownerId) {
+    let offset = 0;
+    let loading = false;
+    const status = element('p', '正在读取回答…');
+    status.className = 'question-status';
+    const list = element('div');
+    const more = element('button', '加载更多');
+    more.type = 'button';
+    more.className = 'secondary';
+    more.hidden = true;
+    const retry = element('button', '重新读取');
+    retry.type = 'button';
+    retry.hidden = true;
+    container.append(status,list,more,retry);
+    async function load(reset = false) {
+      if (loading || version !== sectionVersion) return;
+      loading = true;
+      more.disabled = true;
+      retry.hidden = true;
+      if (reset) { offset = 0; list.replaceChildren(); }
+      try {
+        const result = await window.answerStore.received(ownerId,offset);
+        if (version !== sectionVersion || user?.id !== ownerId) return;
+        for (const answer of result.items) {
+          const article = element('article');
+          article.className = 'answer-card';
+          const link = element('a',answer.questions.title);
+          link.href = './question.html?id=' + encodeURIComponent(answer.question_id) + '#answers';
+          const heading = element('h3');
+          heading.append(link);
+          const meta = element('p',answer.author_name + ' 回答了你的问题 · ' + new Date(answer.created_at).toLocaleString('zh-CN'));
+          meta.className = 'question-meta';
+          const excerpt = Array.from(answer.body).slice(0,180).join('');
+          article.append(heading,meta,element('p',excerpt + (Array.from(answer.body).length > 180 ? '…' : '')));
+          list.append(article);
+        }
+        offset += result.items.length;
+        more.hidden = !result.hasMore;
+        status.textContent = offset ? '' : '暂时没有收到其他读者的回答。';
+      } catch (error) {
+        if (version !== sectionVersion) return;
+        status.textContent = window.answerStore.errorMessage(error);
+        retry.hidden = false;
+      } finally {
+        loading = false;
+        more.disabled = false;
+      }
+    }
+    more.addEventListener('click', () => load());
+    retry.addEventListener('click', () => load(true));
+    await load();
+  }
+
   function renderSection() {
     const version = ++sectionVersion;
     const key = location.hash.slice(1) || 'questions';
@@ -115,6 +168,10 @@
       publish.href = './question.html';
       get('section-body').append(publish);
       loadMyQuestions(get('section-body'), version, user.id);
+      return;
+    }
+    if (key === 'answers') {
+      loadReceivedAnswers(get('section-body'), version, user.id);
       return;
     }
     if (key === 'settings') {

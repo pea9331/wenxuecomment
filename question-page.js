@@ -19,6 +19,7 @@
     get('question-editor').hidden = !editing || !user;
     get('question-login').hidden = !!user || !editing;
     ownerActions();
+    window.dispatchEvent(new CustomEvent('question-view', {detail:{question, visible:!!question && !editing}}));
     if (!user && editing) status('登录后可以发布问题。');
     if (!question || editing) return;
     document.title = question.title + ' · 文学问答';
@@ -96,7 +97,7 @@
     });
   });
   get('question-delete').addEventListener('click', () => {
-    if (!question || !confirm('删除这个问题？此操作无法在网页中撤销。')) return;
+    if (!question || !confirm('删除这个问题及其下的所有回答？此操作无法在网页中撤销。')) return;
     perform(async () => {
       await store.remove(question);
       location.href = new URL('./', location.href).href;
